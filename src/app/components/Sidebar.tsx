@@ -1,167 +1,194 @@
-// components/Sidebar.tsx
+"use client";
 import React, { useState } from "react";
-import {
-  FiGrid,
-  FiLayers,
-  FiLungs,
-  FiBarChart2,
-  FiSyringe,
-  FiMicroscope,
-  FiDollarSign,
-  FiHelpCircle,
-  FiSettings,
-} from "react-icons/fi";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { FiGrid, FiHelpCircle, FiSettings } from "react-icons/fi";
+import { IoIosArrowDown, IoIosArrowUp, IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
+import i1 from "../../../public/assets/i1.svg";
+import i2 from "../../../public/assets/i2.svg";
+import i3 from "../../../public/assets/i33.svg";
+import i4 from "../../../public/assets/i44.svg";
+import i5 from "../../../public/assets/i55.svg";
+import i6 from "../../../public/assets/i66.svg";
+import logo from "../../../public/logo.png"
 
-const Sidebar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false); // For mobile toggle
-  const [isDiseaseBurdenOpen, setIsDiseaseBurdenOpen] = useState<boolean>(false); // For dropdown
+const menuItems = [
+  { href: "/", icon: FiGrid, label: "Dashboard" },
+  { href: "/invisio/overview", icon: i1, label: "Overview" },
+  {
+    href: "/invisio/disease-burden",
+    icon: i2,
+    label: "Disease Burden",
+    subItems: [
+      { href: "/invisio/hospital", label: "Hospital Insurance" },
+      { href: "/invisio/out-of-pocket", label: "Out of Pocket" },
+    ],
+  },
+  { href: "/invisio/treatment", icon: i3, label: "Treatment mapping" },
+  { href: "/invisio/prescription", icon: i4, label: "Prescription Analytics" },
+  { href: "/invisio/diagnostic", icon: i5, label: "Diagnostics" },
+  { href: "/invisio/coc", icon: i6, label: "Cost of Care Analytics" },
+];
+
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+  const pathname = usePathname();
+  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
 
   const toggleSidebar = () => setIsOpen(!isOpen);
-  const toggleDiseaseBurden = () => setIsDiseaseBurdenOpen(!isDiseaseBurdenOpen);
+  const toggleSubmenu = (label: string) => {
+    setOpenSubmenus((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
 
   return (
-    <div className="font-sans">
-      {/* Mobile Toggle Button */}
-      <button
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded-md"
-        onClick={toggleSidebar}
-      >
-        {isOpen ? "Close" : "Menu"}
-      </button>
-
-      {/* Sidebar */}
+    <div
+      className={`fixed top-0 left-0 h-screen bg-gradient-to-b from-blue-700 to-blue-500 text-white flex flex-col justify-between transition-all duration-300 ease-in-out z-40 ${
+        isOpen ? "w-72" : "w-16"
+      }`}
+    >
+      {/* Toggle Button */}
       <div
-        className={`fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-blue-700 to-blue-500 text-white flex flex-col justify-between transform transition-transform duration-300 ease-in-out z-40 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:w-72`}
-      >
-        {/* Top Section */}
-        <div className="p-6">
-          {/* Logo */}
-          <div className="text-2xl font-bold mb-10">INVISIO™</div>
+                        onClick={toggleSidebar}
 
-          {/* Menu Items */}
-          <nav className="space-y-2">
-            <a
-              href="#"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
+  className={`absolute top-[42vh] -right-[30px] z-1 p-[3px] py-9 bg-gray-100 transform -translate-y-1/2 flex justify-center items-center rounded-r-full rounded-l-none shadow-lg focus:outline-none transition-transform duration-300`}
+  >
+            <button
+              className={`text-[#373EE7] font-[48px] text-5xl focus:outline-none transition-transform duration-300 ${
+                isOpen ? "rotate-180" : ""
+              }`}
             >
-              <FiGrid className="w-5 h-5" />
-              <span>Dashboard</span>
-            </a>
-            <a
-              href="#"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              <FiLayers className="w-5 h-5" />
-              <span>Overview</span>
-            </a>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+          </div>
 
-            {/* Disease Burden Dropdown */}
-            <div>
-              <button
-                onClick={toggleDiseaseBurden}
-                className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-blue-600 transition-colors"
+      {/* Top Section */}
+      <div className="p-4">
+        <div
+          className={`text-2xl font-bold mb-8 transition-all duration-300 ${
+            isOpen ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
+          }`}
+        >
+          INVISIO™
+        </div>
+        <nav className="space-y-2">
+          {menuItems.map((item) => (
+            <div key={item.label}>
+              <Link
+                href={item.href}
+                className={`flex items-center justify-between p-3 rounded-lg hover:bg-blue-600 transition-colors ${
+                  pathname === item.href ? "bg-blue-600" : ""
+                }`}
+                onClick={(e) =>
+                  item.subItems && isOpen && (e.preventDefault(), toggleSubmenu(item.label))
+                }
               >
                 <div className="flex items-center space-x-3">
-                  <FiLungs className="w-5 h-5" />
-                  <span>Disease Burden</span>
+                  {typeof item.icon === "function" ? (
+                    <item.icon size={20} />
+                  ) : (
+                    <Image src={item.icon} alt={item.label} className="w-5 h-5" />
+                  )}
+                  <span
+                    className={`transition-all duration-300 ${
+                      isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
                 </div>
-                {isDiseaseBurdenOpen ? (
-                  <IoIosArrowUp className="w-4 h-4" />
-                ) : (
-                  <IoIosArrowDown className="w-4 h-4" />
+                {item.subItems && isOpen && (
+                  <span>
+                    {openSubmenus[item.label] ? (
+                      <IoIosArrowUp size={16} />
+                    ) : (
+                      <IoIosArrowDown size={16} />
+                    )}
+                  </span>
                 )}
-              </button>
-              {isDiseaseBurdenOpen && (
+              </Link>
+              {item.subItems && openSubmenus[item.label] && isOpen && (
                 <div className="pl-8 pt-2 space-y-2">
-                  <a
-                    href="#"
-                    className="block p-2 rounded-lg bg-blue-400 hover:bg-blue-500 transition-colors"
-                  >
-                    Hospital Insurance
-                  </a>
-                  <a
-                    href="#"
-                    className="block p-2 rounded-lg hover:bg-blue-500 transition-colors"
-                  >
-                    Out of Pocket
-                  </a>
+                  {item.subItems.map((subItem) => (
+                    <Link
+                      key={subItem.label}
+                      href={subItem.href}
+                      className={`block p-2 rounded-lg hover:bg-blue-500 transition-colors ${
+                        pathname === subItem.href ? "bg-blue-400" : ""
+                      }`}
+                    >
+                      {subItem.label}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
-
-            <a
-              href="#"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              <FiBarChart2 className="w-5 h-5" />
-              <span>Treatment mapping</span>
-            </a>
-            <a
-              href="#"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              <FiSyringe className="w-5 h-5" />
-              <span>Prescription Analytics</span>
-            </a>
-            <a
-              href="#"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              <FiMicroscope className="w-5 h-5" />
-              <span>Diagnostics</span>
-            </a>
-            <a
-              href="#"
-              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              <FiDollarSign className="w-5 h-5" />
-              <span>Cost of Care Analytics</span>
-            </a>
-          </nav>
-        </div>
-
-        {/* Bottom Section */}
-        <div className="p-6 space-y-4">
-          <a
-            href="#"
-            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            <FiHelpCircle className="w-5 h-5" />
-            <span>Support</span>
-          </a>
-          <a
-            href="#"
-            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            <FiSettings className="w-5 h-5" />
-            <span>Settings</span>
-          </a>
-
-          {/* PBR Logo */}
-          <div className="flex items-center space-x-2">
-            <Image
-              src="/pbr-logo.png" // Replace with the actual path to the PBR logo
-              alt="PBR Logo"
-              width={80}
-              height={40}
-              className="object-contain"
-            />
-            <span className="text-sm">LIFE SCIENCES</span>
-          </div>
-        </div>
+          ))}
+        </nav>
       </div>
 
-      {/* Overlay for mobile when sidebar is open */}
-      {isOpen && (
+      {/* Bottom Section */}
+      <div className="p-4 space-y-4">
+        <Link
+          href="/support"
+          className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors`}
+        >
+          <FiHelpCircle size={20} />
+          <span
+            className={`transition-all duration-300 ${
+              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+            }`}
+          >
+            Support
+          </span>
+        </Link>
+        <Link
+          href="/settings"
+          className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors`}
+        >
+          <FiSettings size={20} />
+          <span
+            className={`transition-all duration-300 ${
+              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+            }`}
+          >
+            Settings
+          </span>
+        </Link>
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-          onClick={toggleSidebar}
-        ></div>
-      )}
+          className={`flex items-center justify-center space-x-2 transition-all duration-300 ${
+            isOpen ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
+          }`}
+        >
+          <Image
+            src={logo}
+            alt="PBR Logo"
+            width={80}
+            height={40}
+            className="object-contain"
+          />
+        </div>
+      </div>
     </div>
   );
 };
