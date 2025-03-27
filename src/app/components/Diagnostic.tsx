@@ -6,18 +6,7 @@ const Hospital = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (iframeRef.current) {
-        iframeRef.current.style.height = `${window.innerHeight}px`; // Set height to full viewport
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Set initial height
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+   
 
   return (
     <div className="w-full 2xl:p-6 p-3  bg-gray-100 min-h-screen flex flex-col 2xl:gap-12 ga2xl:p-6 p-3        ">
