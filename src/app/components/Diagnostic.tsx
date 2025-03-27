@@ -20,7 +20,7 @@ const Hospital = () => {
   }, []);
 
   return (
-    <div className="flex-1 p-6 lg:ml-7 bg-gray-100 min-h-screen flex flex-col gap-12       ">
+    <div className="w-full 2xl:p-6 p-3  bg-gray-100 min-h-screen flex flex-col 2xl:gap-12 ga2xl:p-6 p-3        ">
   <section className="flex flex-col gap-12 ">
       <div>
           <h1 className="text-3xl font-bold text-black">Diagnostics</h1>

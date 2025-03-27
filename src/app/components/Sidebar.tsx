@@ -50,8 +50,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-screen bg-gradient-to-b from-blue-700 to-blue-500 text-white flex flex-col justify-between transition-all duration-300 ease-in-out z-40 ${
-        isOpen ? "w-72" : "w-16"
+      className={`fixed top-0 left-0 h-screen bg-gradient-to-bl from-[#373EE7] to-[#3D84ED] text-white flex flex-col justify-between transition-all duration-300 ease-in-out z-40 ${
+        isOpen ? " w-60 2xl:w-72" : "w-16"
       }`}
     >
       {/* Toggle Button */}
@@ -85,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       {/* Top Section */}
       <div className="p-4">
         <div
-          className={`text-2xl font-bold mb-8 transition-all duration-300 ${
+          className={`2xl:text-2xl text-xl font-bold mb-8 transition-all duration-300 ${
             isOpen ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
           }`}
         >
@@ -97,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
               <Link
                 href={item.href}
                 className={`flex items-center justify-between p-3 rounded-lg hover:bg-blue-600 transition-colors ${
-                  pathname === item.href ? "bg-blue-600" : ""
+                  pathname === item.href ? "bg-[#A9ACFF]" : ""
                 }`}
                 onClick={(e) =>
                   item.subItems && isOpen && (e.preventDefault(), toggleSubmenu(item.label))
@@ -110,7 +110,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                     <Image src={item.icon} alt={item.label} className="w-5 h-5" />
                   )}
                   <span
-                    className={`transition-all duration-300 ${
+                    className={`transition-all duration-300 text-sm 2xl:text-lg ${
                       isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
                     }`}
                   >
@@ -133,7 +133,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                     <Link
                       key={subItem.label}
                       href={subItem.href}
-                      className={`block p-2 rounded-lg hover:bg-blue-500 transition-colors ${
+                      className={`block p-2 rounded-lg text-xs hover:bg-blue-500 transition-colors ${
                         pathname === subItem.href ? "bg-blue-400" : ""
                       }`}
                     >

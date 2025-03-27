@@ -12,7 +12,7 @@ const Layout2 = ({ children }: { children: ReactNode }) => {
       {/* Sidebar */}
       <div
         className={`bg-white transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? "w-72" : "w-0"
+          isSidebarOpen ? "w-60 2xl:w-72" : "w-16"
         } flex-shrink-0`}
       >
         <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
@@ -23,7 +23,7 @@ const Layout2 = ({ children }: { children: ReactNode }) => {
         <div className=" z-30">
           <Topbar />
         </div>
-        <div className="mt-2 px-3 lg:m-1 bg-[#f6f6f6] flex-1 h-auto custom-scrollbar">
+        <div className=" px-3 lg:m-1 bg-[#f6f6f6] flex-1 h-auto custom-scrollbar">
           {children}
         </div>
       </div>

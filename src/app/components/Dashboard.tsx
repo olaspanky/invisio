@@ -19,11 +19,11 @@ const Dashboard: React.FC = () => {
      
 
 
-      <section className="flex flex-col gap-12 ">
+      <section className="flex flex-col gap-5 2xl:gap-12 ">
       <div>
           <h1 className="text-3xl font-bold text-black">Dashboard</h1>
           </div>
-          <div className=" p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]"> 
+          <div className=" p-5 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]"> 
           <p className="text-[18px] text-[#3D84ED] ">
             Welcome back, 
           </p>
