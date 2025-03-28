@@ -14,7 +14,7 @@ const Hospital = () => {
       <div>
           <h1 className="text-3xl font-bold text-black">Diagnostics</h1>
           </div>
-          <div className=" p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]"> 
+          <div className=" p-3 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]"> 
         
           <p className="text-sm text-[#3D84ED] text-[18px]">
           This dashboard presents analytics of clinical diagnostic test requests from anonymized real world data, providing a wide, unprecedented view of diagnostic test requests across Nigeria, Africa’s most populous country. Individual data is processed only for purpose of analysis while maintaining form as gathered in real practice.              </p>

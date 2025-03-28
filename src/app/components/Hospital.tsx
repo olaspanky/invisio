@@ -14,7 +14,7 @@ const Hospital = () => {
       <div>
           <h1 className="text-3xl font-bold text-black">Disease Burden</h1>
           </div>
-          <div className=" p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]"> 
+          <div className=" p-3 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]"> 
         
           <p className="text-sm text-[#3D84ED] text-[18px]">
           The disease burden analytics charts reports trend of diseases diagnosed by different physician specialities. This offers insight on flow of patients diagnosed by specialists and supports targeting of physicians for specific diseases of interest.          </p>
