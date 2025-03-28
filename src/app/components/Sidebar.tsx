@@ -132,7 +132,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                     <Link
                       key={subItem.label}
                       href={subItem.href}
-                      className={`block p-2 rounded-lg text-xs hover:bg-blue-500 transition-colors ${
+                      className={`block p-2 rounded-lg text-sm hover:bg-blue-500 transition-colors ${
                         pathname === subItem.href ? "bg-blue-400" : ""
                       }`}
                     >

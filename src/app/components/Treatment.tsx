@@ -30,7 +30,7 @@ const Hospital = () => {
 
         <iframe
           ref={iframeRef}
-          src="https://j65byqdrge7rxllgvy6rvnive40lifmx.lambda-url.eu-central-1.on.aws/?dashboardId=29b55067-cb28-494b-bbcf-d4f3a69b0f0c"
+          src="https://eu-central-1.quicksight.aws.amazon.com/embed/8a3c4e3477a748f08266b97c36050122/dashboards/29b55067-cb28-494b-bbcf-d4f3a69b0f0c"
           className="w-full h-[1500px] border-none"
           onLoad={() => setLoading(false)}
         ></iframe>
