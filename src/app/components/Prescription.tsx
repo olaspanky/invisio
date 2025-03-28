@@ -2,9 +2,11 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import DashboardSkeletonLoader from "./DashboardLoader";
-const Hospital = () => {
+import useFetchEmbedUrl from "./useFetchEmbedUrl"; // Adjust the path as needed
+
+const Hospital = ({ dashboardId = "93fdb602-d160-4876-832b-fae0561a7f52" }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [loading, setLoading] = useState(true);
+  const { embedUrl, loading, error } = useFetchEmbedUrl(dashboardId);
 
   
 
@@ -21,19 +23,18 @@ const Hospital = () => {
         </section> 
 
 
-      <div className="w-full bg-white shadow-md rounded-lg overflow-hidden relative">
-      {loading && (
-         <>
-         <DashboardSkeletonLoader/>
-         </>
+        <div className="w-full bg-white shadow-md rounded-lg overflow-hidden relative">
+        {loading && <DashboardSkeletonLoader />}
+        {error ? (
+          <div className="p-4 text-red-500">Error: {error}</div>
+        ) : (
+          <iframe
+            ref={iframeRef}
+            src={embedUrl} // Dynamically set src from hook
+            className="w-full h-[1500px] border-none"
+            onLoad={() => console.log("Iframe loaded")} // Optional: for debugging
+          ></iframe>
         )}
-
-        <iframe
-          ref={iframeRef}
-          src="https://eu-central-1.quicksight.aws.amazon.com/embed/c32adcf9623944729af03b266b310359/dashboards/93fdb602-d160-4876-832b-fae0561a7f52"
-          className="w-full h-[1500px] border-none"
-          onLoad={() => setLoading(false)}
-        ></iframe>
       </div>
     </div>
   );
