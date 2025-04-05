@@ -135,7 +135,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       {/* Bottom Section */}
       <div className="p-4 space-y-4">
         <Link
-          href="/support"
+          href="#"
           className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors`}
         >
           <FiHelpCircle size={20} />
@@ -148,7 +148,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           </span>
         </Link>
         <Link
-          href="/settings"
+          href="#"
           className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors`}
         >
           <FiSettings size={20} />
