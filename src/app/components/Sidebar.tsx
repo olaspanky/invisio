@@ -15,19 +15,19 @@ import logo from "../../../public/logo.png"
 
 const menuItems = [
   { href: "/", icon: FiGrid, label: "Dashboard" },
-  { href: "/invisio/overview", icon: i1, label: "Overview"},
-  // {
-  //   href: "/invisio/disease-burden",
-  //   icon: i2,
-  //   label: "Disease Burden",
-  //   subItems: [
-  //     { href: "/invisio/hospital", label: "Hospital Insurance" },
-  //   ],
-  // },
-  // { href: "/invisio/treatment", icon: i3, label: "Treatment mapping" },
-  // { href: "/invisio/prescription", icon: i4, label: "Prescription Analytics" },
-  // { href: "/invisio/diagnostic", icon: i5, label: "Diagnostics" },
-  // { href: "/invisio/coc", icon: i6, label: "Cost of Care Analytics" },
+  { href: "/invisio/overview", icon: i1, label: "Overview" },
+  {
+    href: "/invisio/disease-burden",
+    icon: i2,
+    label: "Disease Burden",
+    subItems: [
+      { href: "/invisio/hospital", label: "Hospital Insurance" },
+    ],
+  },
+  { href: "/invisio/treatment", icon: i3, label: "Treatment mapping" },
+  { href: "/invisio/prescription", icon: i4, label: "Prescription Analytics" },
+  { href: "/invisio/diagnostic", icon: i5, label: "Diagnostics" },
+  { href: "/invisio/coc", icon: i6, label: "Cost of Care Analytics" },
 ];
 
 interface SidebarProps {
@@ -98,9 +98,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 className={`flex items-center justify-between p-3 rounded-lg hover:bg-blue-600 transition-colors ${
                   pathname === item.href ? "bg-[#A9ACFF]" : ""
                 }`}
-                // onClick={(e) =>
-                //   item.subItems && isOpen && (e.preventDefault(), toggleSubmenu(item.label))
-                // }
+                onClick={(e) =>
+                  item.subItems && isOpen && (e.preventDefault(), toggleSubmenu(item.label))
+                }
               >
                 <div className="flex items-center space-x-3">
                   {typeof item.icon === "function" ? (
@@ -116,17 +116,31 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                     {item.label}
                   </span>
                 </div>
-                {/* {item.subItems && isOpen && (
+                {item.subItems && isOpen && (
                   <span>
                     {openSubmenus[item.label] ? (
                       <IoIosArrowUp size={16} />
                     ) : (
                       <IoIosArrowDown size={16} />
-                    )} */}
-                  {/* </span>
-                )} */}
+                    )}
+                  </span>
+                )}
               </Link>
-              
+              {item.subItems && openSubmenus[item.label] && isOpen && (
+                <div className="pl-8 pt-2 space-y-2">
+                  {item.subItems.map((subItem) => (
+                    <Link
+                      key={subItem.label}
+                      href={subItem.href}
+                      className={`block p-2 rounded-lg text-sm 2xl:text-lg hover:bg-blue-500 transition-colors ${
+                        pathname === subItem.href ? "bg-blue-400" : ""
+                      }`}
+                    >
+                      {subItem.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </nav>
@@ -135,7 +149,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       {/* Bottom Section */}
       <div className="p-4 space-y-4">
         <Link
-          href="#"
+          href="/support"
           className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors`}
         >
           <FiHelpCircle size={20} />
@@ -148,7 +162,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           </span>
         </Link>
         <Link
-          href="#"
+          href="/settings"
           className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors`}
         >
           <FiSettings size={20} />
