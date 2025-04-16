@@ -21,7 +21,7 @@ const menuItems = [
     icon: i4,
     label: "Disease Burden",
     subItems: [
-      { href: "/invisio/hospital", label: "Hospital Insurance" },
+      { href: "/invisio/hospital", label: "Out of Pocket" },
     ],
   },
   { href: "/invisio/treatment", icon: i3, label: "Treatment mapping" },
