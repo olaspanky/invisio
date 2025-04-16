@@ -18,16 +18,16 @@ const menuItems = [
   { href: "/invisio/overview", icon: i1, label: "Overview" },
   {
     href: "/invisio/disease-burden",
-    icon: i2,
+    icon: i4,
     label: "Disease Burden",
     subItems: [
       { href: "/invisio/hospital", label: "Hospital Insurance" },
     ],
   },
   { href: "/invisio/treatment", icon: i3, label: "Treatment mapping" },
-  { href: "/invisio/prescription", icon: i4, label: "Prescription Analytics" },
+  { href: "/invisio/prescription", icon: i6, label: "Prescription Analytics" },
   { href: "/invisio/diagnostic", icon: i5, label: "Diagnostics" },
-  { href: "/invisio/coc", icon: i6, label: "Cost of Care Analytics" },
+  { href: "/invisio/coc", icon: i2, label: "Cost of Care Analytics" },
 ];
 
 interface SidebarProps {

@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
 
 
   return (
-    <div className="flex-1  bg-gray-100 min-h-screen flex flex-col gap-12">
+    <div className="flex-1  bg-gray-100 min-h-screen flex flex-col py-12 gap-12">
      
 
 
@@ -23,7 +23,9 @@ const Dashboard: React.FC = () => {
       <div>
           <h1 className="text-3xl font-bold text-black">Dashboard</h1>
           </div>
-          <div className=" p-3 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]"> 
+          <div className=" p-3 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px] bg-contain bg-no-repeat bg-right"  style={{
+                backgroundImage: `url('/assets/top.png')`,
+            }}> 
           <p className="text-[18px] text-[#3D84ED] ">
             Welcome back, 
           </p>
@@ -33,6 +35,8 @@ const Dashboard: React.FC = () => {
           <p className="text-sm text-[#3D84ED] text-[18px]">
             Helping you uncover market opportunities with INVISIO™
           </p>
+
+          
             </div>  
         </section>  
 
