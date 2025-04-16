@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
 
 
   return (
-    <div className="flex-1  bg-gray-100 min-h-screen flex flex-col py-12 gap-12">
+    <div className="flex-1  bg-gray-100 min-h-screen flex flex-col pb-12 gap-12">
      
 
 

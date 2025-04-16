@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-screen bg-gradient-to-bl from-[#373EE7] to-[#3D84ED] text-white flex flex-col justify-between transition-all duration-300 ease-in-out z-40 ${
+      className={`fixed top-0 left-0 h-screen py-5 bg-gradient-to-bl from-[#373EE7] to-[#3D84ED] text-white flex flex-col justify-between transition-all duration-300 ease-in-out z-40 ${
         isOpen ? " w-60 2xl:w-72" : "w-16"
       }`}
     >
