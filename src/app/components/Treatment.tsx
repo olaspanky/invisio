@@ -41,8 +41,9 @@ const Hospital = ({ dashboardId = "default-dashboard-id" }) => {
         <div>
           <h1 className="text-3xl font-bold text-black">Treatment Mapping</h1>
         </div>
-        <div className="p-3 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px]">
-          <p className="text-sm text-[#3D84ED] text-[18px]">
+        <div className=" p-3 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px] bg-contain bg-no-repeat bg-right"  style={{
+                backgroundImage: `url('/assets/top.png')`,
+            }}>           <p className="text-sm text-[#3D84ED] text-[18px]">
             This analytics provides insight into doctors’ treatment preference for each disease diagnosed and treated and across diseases categories. All drugs prescribed are mapped to and standardized using global best practice of the WHO Anatomical Therapeutic Chemical (ATC) classification system, from levels 1 to 5. Level 1 is the organ or system on which they act and their therapeutic, level 2 to 4 are the pharmacological or therapeutic sub-group, and level 5 is the drug itself. This offers insight on therapy area and drug opportunity or brand share of disease for planning and performance assessment.
           </p>
         </div>
