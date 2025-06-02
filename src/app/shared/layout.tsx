@@ -3,9 +3,18 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 
 const Layout2 = ({ children }: { children: ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+   const pathname = usePathname();
+  const isAuthRoute = pathname?.startsWith("/auth");
+
+ 
+  if (isAuthRoute) {
+    return <>{children}</>;
+  }
+
 
   return (
     <div className="flex min-h-screen font-custom">
