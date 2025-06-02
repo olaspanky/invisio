@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiGrid, FiHelpCircle, FiSettings } from "react-icons/fi";
+import { FiGrid, FiHelpCircle, FiSettings, FiLogOut } from "react-icons/fi";
 import { IoIosArrowDown, IoIosArrowUp, IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
 import i1 from "../../../public/assets/i1.svg";
@@ -12,6 +12,7 @@ import i4 from "../../../public/assets/i44.svg";
 import i5 from "../../../public/assets/i55.svg";
 import i6 from "../../../public/assets/i66.svg";
 import logo from "../../../public/logo.png"
+import useLogout from "../../hooks/useLogout";
 
 const menuItems = [
   { href: "/", icon: FiGrid, label: "Dashboard" },
@@ -38,7 +39,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const pathname = usePathname();
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
-
+ const { logout } = useLogout();
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleSubmenu = (label: string) => {
     setOpenSubmenus((prev) => ({
@@ -174,6 +175,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             Settings
           </span>
         </Link>
+       <button
+    onClick={logout}
+    className={`flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors w-full text-left`}
+  >
+    <FiLogOut size={20} />
+    <span
+      className={`transition-all duration-300 ${
+        isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
+      }`}
+    >
+      Sign Out
+    </span>
+  </button>
         <div
           className={`flex items-center justify-center space-x-2 transition-all duration-300 ${
             isOpen ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
