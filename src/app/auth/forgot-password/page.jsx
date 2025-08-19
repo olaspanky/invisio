@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
 
     try {
       const response = await fetchWrapper.post(
-        "https://invisio.api.pbr.com.ng/api/V1/forgot-password",
+        "https://invisio.pbr.com.ng/api/V1/forgot-password",
         { email }
       );
 

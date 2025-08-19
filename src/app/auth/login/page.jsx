@@ -46,7 +46,8 @@ export default function LoginPage() {
 
     try {
       const res = await fetchWrapper.post(
-        'https://invisio.api.pbr.com.ng/api/v1/login',
+        'https://invisio.pbr.com.ng/api/v1/login',
+       
         form
       );
       const data = await res.json();
