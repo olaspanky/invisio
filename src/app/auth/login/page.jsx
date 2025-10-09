@@ -36,40 +36,46 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setServerError('');
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setServerError('');
 
-    if (!validate()) return;
+  if (!validate()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const res = await fetchWrapper.post(
-        'https://invisio.pbr.com.ng/api/v1/login',
-       
-        form
-      );
-      const data = await res.json();
+  try {
+    const res = await fetchWrapper.post(
+      'https://invisio.pbr.com.ng/api/v1/login',
+      form
+    );
+    const data = await res.json();
 
-      if (!res.ok) {
-        setServerError(data.error || 'Login failed. Please try again.');
-      } else {
-        const token = data?.data?.token;
-        if (!token) {
-          setServerError('No token received. Please contact support.');
-          return;
-        }
+    if (!res.ok) {
+      setServerError(data.error || 'Login failed. Please try again.');
+    } else {
+      const token = data?.data?.token;
+      const user = data?.data?.user; // Assuming user details are in data.data.user
 
-        localStorage.setItem('token', token);
-        router.push('/');
+      if (!token) {
+        setServerError('No token received. Please contact support.');
+        return;
       }
-    } catch (error) {
-      setServerError(error.message || 'An unexpected error occurred.');
-    } finally {
-      setLoading(false);
+
+      // Save token and user details to localStorage
+      localStorage.setItem('token', token);
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user)); // Store user object as a JSON string
+      }
+
+      router.push('/');
     }
-  };
+  } catch (error) {
+    setServerError(error.message || 'An unexpected error occurred.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div

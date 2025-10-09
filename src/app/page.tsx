@@ -1,7 +1,7 @@
 'use client';
 import { redirect } from "next/navigation";
 import { isLoggedIn } from "@/lib/auth"; 
-import Dashboard from "./components/Dashboard";
+import Landing from "./components/Landing";
 
 export default function Home() {
   const loggedIn = isLoggedIn();
@@ -10,5 +10,5 @@ export default function Home() {
     redirect("/auth/login");
   }
 
-  return <Dashboard />;
+  return <Landing />;
 }

@@ -1,5 +1,4 @@
-// components/Dashboard.tsx
-import React from "react";
+"use client"; // Ensure this is a client componentimport React, { useEffect, useState } from "react";
 import { FiSearch, FiUser } from "react-icons/fi";
 import Card from "./Card";  
 import i1 from "../../../public/assets/i1.svg";
@@ -8,6 +7,14 @@ import i3 from "../../../public/assets/d2.svg";
 import i4 from "../../../public/assets/d3.svg";
 import i5 from "../../../public/assets/d4.svg";
 import i6 from "../../../public/assets/d5.svg";
+import { useState, useEffect } from "react";
+
+interface User {
+  name: string;
+  email?: string;
+  id?: string;
+  // Add other fields as per API response
+}
 const Dashboard: React.FC = () => {
 
     const cardData = [
@@ -17,6 +24,23 @@ const Dashboard: React.FC = () => {
         { title: "Diagnostics", icon: i5, description: "This dashboard presents analytics of clinical diagnostic test requests from anonymized real world data, providing a wide, unprecedented view of diagnostic test requests across Nigeria, Africa’s most populous country. Individual data is processed only for purpose of analysis while maintaining form as gathered in real practice." },
         { title: "Cost of Care Analytics", icon: i6, description: "The disease prevalence analytics charts reports trend of diseases diagnosed by different physician specialities. This offers insight on flow of patients diagnosed by specialists and supports targeting of physicians for specific diseases of interest" }
       ];
+
+        const [user, setUser] = useState<User | null>(null);
+      
+        useEffect(() => {
+          const storedUser = localStorage.getItem('user');
+          if (storedUser) {
+            try {
+              const parsedUser = JSON.parse(storedUser);
+              // Verify that parsedUser matches the User interface
+              if (parsedUser && typeof parsedUser.name === 'string') {
+                setUser(parsedUser);
+              }
+            } catch (error) {
+              console.error('Error parsing user from localStorage:', error);
+            }
+          }
+        }, []);
 
 
   return (
@@ -35,8 +59,13 @@ const Dashboard: React.FC = () => {
             Welcome back, 
           </p>
           <p>
-          <span className="font-semibold text-[#0061DA] text-[24px]">Gbolade Akintunmi</span>
-          </p>
+  {user ? (
+              <span className="font-semibold text-[#0061DA] text-[24px]">
+                Welcome, {user.name}
+              </span>
+            ) : (
+              <p className="text-[#0061DA] text-[24px]">No user logged in</p>
+            )}          </p>
           <p className="text-sm text-[#3D84ED] text-[18px]">
             Helping you uncover market opportunities with INVISIO™
           </p>

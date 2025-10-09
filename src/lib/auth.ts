@@ -20,6 +20,7 @@ export const clearAuthTokens = (): void => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
+localStorage.removeItem('user');
   }
 };
 
