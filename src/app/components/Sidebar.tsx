@@ -2,463 +2,216 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiGrid, FiHelpCircle, FiSettings, FiLogOut } from "react-icons/fi";
-import { IoIosArrowDown, IoIosArrowUp, IoIosArrowBack } from "react-icons/io";
+import { FiHelpCircle, FiSettings, FiLogOut, FiBell, FiUser } from "react-icons/fi";
 import Image from "next/image";
-import i1 from "../../../public/assets/i1.svg";
-import i2 from "../../../public/assets/i2.svg";
-import i3 from "../../../public/assets/i33.svg";
-import i4 from "../../../public/assets/i44.svg";
-import i5 from "../../../public/assets/i55.svg";
-import i6 from "../../../public/assets/i66.svg";
 import logo from "../../../public/logo.png";
-import { FaHospital, FaFileInvoice } from "react-icons/fa";
 
-const claimMenuItems = [
-  { href: "/invisio/dashboard", icon: FiGrid, label: "Dashboard" },
-  { href: "/invisio/overview", icon: i1, label: "Overview" },
-  {
-    href: "/invisio/oop",
-    icon: i4,
-    label: "Disease Burden",
-    subItems: [{ href: "/invisio/oop", label: "Claims" }],
-  },
-  { href: "/invisio/treatment", icon: i3, label: "Treatment mapping" },
-  { href: "/invisio/prescription", icon: i6, label: "Prescription Analytics" },
-  { href: "/invisio/diagnostic", icon: i5, label: "Diagnostics" },
-  { href: "/invisio/coc", icon: i2, label: "Cost of Care Analytics" },
+const navigationItems = [
+  { href: "/invisio/dashboard", label: "Dashboard" },
+  { href: "/invisio/overview", label: "Overview" },
+  { href: "/invisio/oop", label: "Disease Burden" },
+  { href: "/invisio/treatment", label: "Treatment Mapping" },
+  { href: "/invisio/prescription", label: "Prescription Analytics" },
+  { href: "/invisio/diagnostic", label: "Diagnostics" },
+  { href: "/invisio/coc", label: "Cost of Care Analytics" },
 ];
 
-interface SidebarProps {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+// User type definition
+interface User {
+  name?: string;
+  email?: string;
+  [key: string]: any;
 }
 
-type ViewType = "main" | "hospital" | "claims";
-
-// Storage utility
-const storage = {
-  get<T>(key: string, defaultValue: T): T {
-    if (typeof window === "undefined") return defaultValue;
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue;
-    } catch {
-      return defaultValue;
-    }
-  },
-  
-  set<T>(key: string, value: T): void {
-    if (typeof window === "undefined") return;
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-      // Fail silently
-    }
-  },
-  
-  clear: (): void => {
-    if (typeof window === "undefined") return;
-    try {
-      localStorage.removeItem("invisio_current_view");
-      localStorage.removeItem("invisio_open_submenus");
-      localStorage.removeItem("invisio_sidebar_open");
-    } catch {
-      // Fail silently
-    }
-  }
-};
-
-// Determine view from pathname
-const getViewFromPath = (pathname: string): ViewType => {
-  if (pathname === "/invisio/hospital") return "hospital";
-  if (pathname.startsWith("/invisio/") && pathname !== "/invisio/hospital") return "claims";
-  return "main";
-};
-
-// Get active submenus for claims section
-const getActiveSubmenus = (pathname: string): Record<string, boolean> => {
-  const activeSubmenus: Record<string, boolean> = {};
-  
-  claimMenuItems.forEach((item) => {
-    if (item.subItems) {
-      const isActive = item.href === pathname || 
-                       item.subItems.some((subItem) => subItem.href === pathname);
-      activeSubmenus[item.label] = isActive;
-    }
-  });
-  
-  return activeSubmenus;
-};
-
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
+const Topbar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   
-  const [currentView, setCurrentView] = useState<ViewType>("main");
-  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
-  // Initialize on client side
   useEffect(() => {
-    // Get stored states
-    const storedView = storage.get<ViewType>("invisio_current_view", "main");
-    const storedSubmenus = storage.get<Record<string, boolean>>("invisio_open_submenus", {});
-    const storedSidebarOpen = storage.get<boolean>("invisio_sidebar_open", true);
-    
-    // Determine view from current path
-    const pathView = getViewFromPath(pathname);
-    
-    // Use path view (handles direct URL access)
-    const finalView = pathView;
-    
-    // Get active submenus if in claims view
-    const pathSubmenus = finalView === "claims" ? getActiveSubmenus(pathname) : {};
-    const mergedSubmenus = { ...storedSubmenus, ...pathSubmenus };
-    
-    setCurrentView(finalView);
-    setOpenSubmenus(mergedSubmenus);
-    setIsOpen(storedSidebarOpen);
     setIsHydrated(true);
     
-    // Save states
-    storage.set("invisio_current_view", finalView);
-    storage.set("invisio_open_submenus", mergedSubmenus);
-  }, [pathname, setIsOpen]);
-
-  // Persist states
-  useEffect(() => {
-    if (isHydrated) {
-      storage.set("invisio_current_view", currentView);
+    // Get user from localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
     }
-  }, [currentView, isHydrated]);
+    
+    const handleScroll = () => {
+      const navigationElement = document.getElementById('navigation-tabs');
+      if (navigationElement) {
+        const offset = navigationElement.offsetTop;
+        setIsSticky(window.scrollY > offset);
+      }
+    };
 
-  useEffect(() => {
-    if (isHydrated) {
-      storage.set("invisio_open_submenus", openSubmenus);
-    }
-  }, [openSubmenus, isHydrated]);
-
-  useEffect(() => {
-    if (isHydrated) {
-      storage.set("invisio_sidebar_open", isOpen);
-    }
-  }, [isOpen, isHydrated]);
-
-  const toggleSidebar = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen, setIsOpen]);
-
-  const toggleSubmenu = useCallback((label: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setOpenSubmenus((prev) => ({
-      ...prev,
-      [label]: !prev[label],
-    }));
-  }, []);
-
-  const handleHospitalClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setCurrentView("hospital");
-    router.push("/invisio/hospital");
-  }, [router]);
-
-  const handleClaimsClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setCurrentView("claims");
-    // Default to dashboard when entering claims section
-    router.push("/invisio/dashboard");
-  }, [router]);
-
-  const handleBackClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setCurrentView("main");
-    // Don't change URL, just go back to main menu view
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleLogout = useCallback(() => {
+    // Clear both token and user from localStorage
     localStorage.removeItem("token");
-    storage.clear();
-    setCurrentView("main");
-    setOpenSubmenus({});
-    setIsOpen(true);
+    localStorage.removeItem("user");
     router.push("/auth/login");
-  }, [router, setIsOpen]);
+  }, [router]);
 
-  const renderMainMenu = () => (
-    <nav className="space-y-2">
-      {/* Invisio Hospital */}
-      <div
-        className={`flex items-center p-3 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer ${
-          currentView === "hospital" ? "bg-[#A9ACFF]" : ""
-        }`}
-        onClick={handleHospitalClick}
-      >
-        <div className="flex items-center space-x-3">
-          <FaHospital size={20} />
-          <span
-            className={`transition-all duration-300 text-sm 2xl:text-lg ${
-              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-            }`}
-          >
-            Invisio Hospital
-          </span>
-        </div>
-      </div>
+  const getCurrentDate = () => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const date = new Date();
+    const day = date.getDate();
+    const suffix = day === 1 || day === 21 || day === 31 ? "st" : day === 2 || day === 22 ? "nd" : day === 3 || day === 23 ? "rd" : "th";
+    return `${months[date.getMonth()]} ${day}${suffix} ${date.getFullYear()}`;
+  };
 
-      {/* Invisio Claims */}
-      <div
-        className={`flex items-center p-3 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer ${
-          currentView === "claims" ? "bg-[#A9ACFF]" : ""
-        }`}
-        onClick={handleClaimsClick}
-      >
-        <div className="flex items-center space-x-3">
-          <FaFileInvoice size={20} />
-          <span
-            className={`transition-all duration-300 text-sm 2xl:text-lg ${
-              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-            }`}
-          >
-            Invisio Claims
-          </span>
-        </div>
-      </div>
-    </nav>
-  );
+  // Get user's first name or full name
+  const getUserDisplayName = () => {
+    if (!user) return 'User';
+    
+    // Try to get name from different possible structures
+    if (user.name) {
+      // If it's a full name, get the first name
+      const nameParts = user.name.split(' ');
+      return nameParts[0] || user.name;
+    }
+    if (user.firstName) return user.firstName;
+    if (user.email) return user.email.split('@')[0]; // Use part before @ in email
+    return 'User';
+  };
 
-  const renderClaimsMenu = () => (
-    <nav className="space-y-2">
-      {/* Back Button */}
-      <div
-        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
-        onClick={handleBackClick}
-      >
-        <IoIosArrowBack size={20} />
-        <span
-          className={`transition-all duration-300 text-sm 2xl:text-lg ${
-            isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-          }`}
-        >
-          Back
-        </span>
-      </div>
-
-      {/* Claims Menu Items */}
-      {claimMenuItems.map((item) => (
-        <div key={item.label}>
-          <Link
-            href={item.href}
-            className={`flex items-center justify-between p-3 rounded-lg hover:bg-blue-600 transition-colors ${
-              pathname === item.href ? "bg-[#A9ACFF]" : ""
-            }`}
-            onClick={(e) => {
-              if (item.subItems && isOpen) {
-                toggleSubmenu(item.label, e);
-              }
-            }}
-          >
-            <div className="flex items-center space-x-3">
-              {typeof item.icon === "function" ? (
-                <item.icon size={20} />
-              ) : (
-                <Image src={item.icon} alt={item.label} className="w-5 h-5" />
-              )}
-              <span
-                className={`transition-all duration-300 text-sm 2xl:text-lg ${
-                  isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-                }`}
-              >
-                {item.label}
-              </span>
-            </div>
-            {item.subItems && isOpen && (
-              <span onClick={(e) => toggleSubmenu(item.label, e)}>
-                {openSubmenus[item.label] ? (
-                  <IoIosArrowUp size={16} />
-                ) : (
-                  <IoIosArrowDown size={16} />
-                )}
-              </span>
-            )}
-          </Link>
-          
-          {/* Submenu Items */}
-          {item.subItems && openSubmenus[item.label] && isOpen && (
-            <div className="pl-8 pt-2 space-y-2">
-              {item.subItems.map((subItem) => (
-                <Link
-                  key={subItem.label}
-                  href={subItem.href}
-                  className={`block p-2 rounded-lg text-sm 2xl:text-lg hover:bg-blue-500 transition-colors ${
-                    pathname === subItem.href ? "bg-blue-400" : ""
-                  }`}
-                >
-                  {subItem.label}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
-    </nav>
-  );
-
-  const renderHospitalMenu = () => (
-    <nav className="space-y-2">
-      {/* Back Button */}
-      <div
-        className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
-        onClick={handleBackClick}
-      >
-        <IoIosArrowBack size={20} />
-        <span
-          className={`transition-all duration-300 text-sm 2xl:text-lg ${
-            isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-          }`}
-        >
-          Back
-        </span>
-      </div>
-
-      {/* Hospital Content - Currently highlighted */}
-      <div className="flex items-center p-3 rounded-lg bg-[#A9ACFF] cursor-default">
-        <div className="flex items-center space-x-3">
-          <FaHospital size={20} />
-          <span
-            className={`transition-all duration-300 text-sm 2xl:text-lg ${
-              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-            }`}
-          >
-            Hospital Dashboard
-          </span>
-        </div>
-      </div>
-    </nav>
-  );
-
-  // Loading state
   if (!isHydrated) {
     return (
-      <div className={`fixed top-0 left-0 h-screen py-5 bg-gradient-to-bl from-[#373EE7] to-[#3D84ED] text-white flex flex-col justify-between transition-all duration-300 ease-in-out z-40 w-16`}>
-        <div className="p-4">
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 bg-blue-400 rounded w-3/4"></div>
-            <div className="h-10 bg-blue-400 rounded"></div>
-            <div className="h-10 bg-blue-400 rounded"></div>
-          </div>
-        </div>
+      <div className="fixed top-0 left-0 right-0 h-16 bg-[#0A1647] z-50">
+        <div className="animate-pulse h-full"></div>
       </div>
     );
   }
 
   return (
-    <div
-      className={`fixed top-0 left-0 h-screen py-5 bg-gradient-to-bl from-[#373EE7] to-[#3D84ED] text-white flex flex-col justify-between transition-all duration-300 ease-in-out z-40 ${
-        isOpen ? "w-60 2xl:w-72" : "w-16"
-      }`}
-    >
-      {/* Toggle Button */}
-      <div
-        onClick={toggleSidebar}
-        className="absolute top-[42vh] -right-[30px] z-50 p-[3px] py-9 bg-gray-100 transform -translate-y-1/2 flex justify-center items-center rounded-r-full rounded-l-none shadow-lg cursor-pointer transition-all duration-300 hover:bg-gray-200"
+    <>
+      {/* Top Section - This will scroll with the page */}
+      <div className="bg-[#0A1647] text-white px-32 bg-contain bg-no-repeat bg-right"
+       style={{
+                backgroundImage: `url('/assets/ci2.png')`,
+            }}>
+        {/* Top Section - Notifications and Date */}
+        <div className="flex items-center justify-between px-6 py-2">
+          <div>
+            <Image src={logo} alt="INVISIO Logo" width={120} height={30} className="object-contain" />
+          </div>
+          <div className="flex items-center space-x-4">
+            {/* Notifications */}
+            <button className="p-1 hover:bg-blue-700/30 rounded-lg transition-colors">
+              <FiBell size={18} />
+            </button>
+
+            {/* Settings with Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center space-x-2 p-1 hover:bg-blue-700/30 rounded-lg transition-colors"
+              >
+                <FiSettings size={18} />
+              </button>
+              
+              {/* User Menu Dropdown */}
+              {showUserMenu && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowUserMenu(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm text-gray-600">Signed in as</p>
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {user?.email || getUserDisplayName()}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        router.push('/settings/profile');
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                    >
+                      <FiUser size={16} />
+                      <span>Profile Settings</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        handleLogout();
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
+                    >
+                      <FiLogOut size={16} />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Date */}
+            <div className="text-xs text-white/80">
+              {getCurrentDate()}
+            </div>
+          </div>
+        </div>
+
+        {/* Page Title Section - This will scroll with the page */}
+        <div className="border-t border-white/10">
+          <div className="flex items-end justify-between px-6 pt-6 pb-0">
+            <div>
+              <div className="text-xs text-white/60 mb-1">Overview</div>
+              <h1 className="text-3xl font-light mb-1">
+                Welcome back, {getUserDisplayName()}
+              </h1>
+              <p className="text-sm text-white/70 mb-6">Helping you uncover market opportunities with INVISIO™</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Tabs - Sticky Section */}
+      <div 
+        id="navigation-tabs"
+        className={`bg-[#0A1647] text-white px-32 transition-all duration-200 ${
+          isSticky ? 'fixed top-0 left-0 right-0 z-[100] shadow-lg' : 'relative'
+        }`}
       >
-        <button
-          className={`text-[#373EE7] focus:outline-none transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
-          aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={3}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-      </div>
-
-      {/* Main Content */}
-      <div className="p-4">
-        <div
-          className={`2xl:text-2xl text-xl font-bold mb-8 transition-all duration-300 ${
-            isOpen ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
-          }`}
-        >
-          INVISIO™
-        </div>
-        
-        {currentView === "main" && renderMainMenu()}
-        {currentView === "claims" && renderClaimsMenu()}
-        {currentView === "hospital" && renderHospitalMenu()}
-      </div>
-
-      {/* Footer */}
-      <div className="p-4 space-y-4">
-        <Link
-          href="/support"
-          className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          <FiHelpCircle size={20} />
-          <span
-            className={`transition-all duration-300 ${
-              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-            }`}
-          >
-            Support
-          </span>
-        </Link>
-        <Link
-          href="/settings"
-          className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          <FiSettings size={20} />
-          <span
-            className={`transition-all duration-300 ${
-              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-            }`}
-          >
-            Settings
-          </span>
-        </Link>
-        <button
-          onClick={handleLogout}
-          className="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-600 transition-colors w-full text-left"
-        >
-          <FiLogOut size={20} />
-          <span
-            className={`transition-all duration-300 ${
-              isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
-            }`}
-          >
-            Logout
-          </span>
-        </button>
-        <div
-          className={`flex items-center justify-center space-x-2 transition-all duration-300 ${
-            isOpen ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
-          }`}
-        >
-          <Image
-            src={logo}
-            alt="PBR Logo"
-            width={80}
-            height={40}
-            className="object-contain"
-          />
+        <div className="px-6">
+          <div className="flex items-center space-x-0">
+            {navigationItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`px-6 py-3 text-sm font-normal transition-colors relative border-b-2 ${
+                  pathname === item.href
+                    ? "text-white border-white"
+                    : "text-white/60 border-transparent hover:text-white hover:border-white/30"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Spacer to prevent content jump when navigation becomes fixed */}
+      {isSticky && <div className="h-[49px]" />}
+    </>
   );
 };
 
-export default Sidebar;
+export default Topbar;

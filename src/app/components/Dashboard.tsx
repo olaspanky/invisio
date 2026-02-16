@@ -48,31 +48,7 @@ const Dashboard: React.FC = () => {
      
 
 
-      <section className="flex flex-col gap-5 2xl:gap-12 ">
-      <div>
-          <h1 className="text-3xl font-bold text-black">Dashboard</h1>
-          </div>
-          <div className=" p-3 2xl:p-9 flex flex-col gap-3 bg-[#DEEAFC] rounded-[20px] bg-contain bg-no-repeat bg-right"  style={{
-                backgroundImage: `url('/assets/top.png')`,
-            }}> 
-          <p className="text-[18px] text-[#3D84ED] ">
-            Welcome back, 
-          </p>
-          <p>
-  {user ? (
-              <span className="font-semibold text-[#0061DA] text-[24px]">
-                Welcome, {user.name}
-              </span>
-            ) : (
-              <p className="text-[#0061DA] text-[24px]">No user logged in</p>
-            )}          </p>
-          <p className="text-sm text-[#3D84ED] text-[18px]">
-            Helping you uncover market opportunities with INVISIO™
-          </p>
-
-          
-            </div>  
-        </section>  
+ 
 
       {/* Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 2xl:gap-20">
