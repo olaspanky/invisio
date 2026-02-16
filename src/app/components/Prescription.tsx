@@ -8,7 +8,11 @@ const Hospital = ({ dashboardId = "93fdb602-d160-4876-832b-fae0561a7f52" }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { embedUrl, loading, error } = useFetchEmbedUrl(dashboardId);
 
-  
+  <iframe
+        width="960"
+        height="720"
+        src="https://eu-central-1.quicksight.aws.amazon.com/sn/embed/share/accounts/618503970544/dashboards/93fdb602-d160-4876-832b-fae0561a7f52?directory_alias=pbraws">
+</iframe>
 
   return (
     <div className="w-full p-6  bg-gray-100 min-h-screen flex flex-col 2xl:gap-12 gap-6        ">

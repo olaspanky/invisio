@@ -56,7 +56,7 @@ export default function RegisterPage() {
        
             }
     try {
-      const response = await fetchWrapper.post('https://invisio.api.pbr.com.ng/api/V1/register',payload);
+      const response = await fetchWrapper.post('https://invisio.pbr.com.ng/api/V1/register',payload);
 
       if (!response.ok) {
         const errorData = await response.json();

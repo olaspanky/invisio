@@ -56,7 +56,7 @@ export default function NewPasswordPage() {
 
     try {
       setLoading(true);
-      const res = await fetch("https://invisio.api.pbr.com.ng/api/v1/reset-password", {
+      const res = await fetch("https://invisio.pbr.com.ng/api/v1/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

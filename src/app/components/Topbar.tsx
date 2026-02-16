@@ -1,5 +1,5 @@
 import { FiSearch, FiUser } from "react-icons/fi";
-
+import Image from "next/image";
 
 
 
@@ -22,10 +22,8 @@ const Sidebar = () => {
                  />
                </div>
                <div className="flex items-center space-x-2">
-                 <span className="w-6 h-6 text-gray-600">
-                   <FiUser />
-                 </span>
-                 <span className="text-gray-800 font-medium">Gbolade Akintunmi</span>
+                <Image
+                  src="/assets/profile.png" width={100} height={30}  alt="Logo"  />
                </div>
              </div>
     </div>
