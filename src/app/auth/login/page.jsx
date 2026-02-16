@@ -74,7 +74,7 @@ export default function LoginPage() {
 
   return (
 <div className="min-h-screen flex flex-col p-12 isidora" style={{
-  background: 'linear-gradient(to bottom, #000A48 0%, #000A48 50%, white 50%, white 100%)'
+  background: 'linear-gradient(to bottom, #000A48 0%, #000A48 50%, #ffffff 50%, #ffffff 100%)'
 }}>
         <div>
             <img
@@ -106,7 +106,7 @@ export default function LoginPage() {
             <img
               src="/invi.png" // ← Replace with your scientist + charts image
               alt="Scientists with data visualization"
-              className="relative z-10 w-full max-w-sm 2xl:max-w-md  rounded-xl shadow-2xl"
+              className="relative z-10 w-full max-w-sm 2xl:max-w-md  rounded-xl "
             />
             {/* You can also use SVG icons / animated bars here if preferred */}
           </div>
