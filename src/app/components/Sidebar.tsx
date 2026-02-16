@@ -98,7 +98,7 @@ const Topbar: React.FC = () => {
   return (
     <>
       {/* Top Section - This will scroll with the page */}
-      <div className="bg-[#0A1647] text-white px-32 bg-contain bg-no-repeat bg-right"
+      <div className="bg-[#0A1647] text-white 2xl:px-32 lg:px-12 p-3  bg-contain bg-no-repeat bg-right"
        style={{
                 backgroundImage: `url('/assets/ci2.png')`,
             }}>
@@ -185,17 +185,17 @@ const Topbar: React.FC = () => {
       {/* Navigation Tabs - Sticky Section */}
       <div 
         id="navigation-tabs"
-        className={`bg-[#0A1647] text-white px-32 transition-all duration-200 ${
+        className={`bg-[#0A1647] text-white 2xl:px-32 lg:px-12 p-3  transition-all duration-200 ${
           isSticky ? 'fixed top-0 left-0 right-0 z-[100] shadow-lg' : 'relative'
         }`}
       >
         <div className="px-6">
-          <div className="flex items-center space-x-0">
+          <div className="flex items-center space-x-0 justify-between">
             {navigationItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={`px-6 py-3 text-sm font-normal transition-colors relative border-b-2 ${
+                className={` text-sm font-normal transition-colors relative border-b-2 ${
                   pathname === item.href
                     ? "text-white border-white"
                     : "text-white/60 border-transparent hover:text-white hover:border-white/30"
